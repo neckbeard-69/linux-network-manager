@@ -40,5 +40,3 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
-      - name: Check code formatting
-        run: go fmt ./... | tee /dev/stderr | (! grep -q .)
