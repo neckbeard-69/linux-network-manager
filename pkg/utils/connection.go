@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -18,6 +20,17 @@ func ConnectWithPassword(SSID, password string) error {
 	return nil
 }
 
+func deleteNetwork(SSID string) error {
+
+	cmd := exec.Command("nmcli", "delete", "delete", SSID)
+	output, err := cmd.Output()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	fmt.Println(string(output))
+	return nil
+}
 func ConnectWithoutPassword(SSID string) error {
 	cmd := exec.Command("nmcli", "connection", "up", SSID)
 	output, err := cmd.Output()
@@ -84,10 +97,51 @@ func GetAvailableNetworks() ([]string, error) {
 }
 
 func IsNetworkSaved(SSID string) bool {
-	cmd := exec.Command("nmcli", "connection", "show")
+	cmd := exec.Command("nmcli", "-t", "-f", "NAME", "connection", "show")
 	output, _ := cmd.Output()
-	if strings.Contains(string(output), SSID) {
-		return true
+
+	lines := strings.Split(string(output), "\n")
+	for _, line := range lines {
+		if strings.TrimSpace(line) == SSID {
+			return true
+		}
 	}
 	return false
+}
+
+func IsNetworkOpen(SSID string) bool {
+	cmd := exec.Command("nmcli", "-t", "-f", "SSID,SECURITY", "device", "wifi", "list")
+	output, _ := cmd.Output()
+
+	lines := strings.Split(string(output), "\n")
+	for _, line := range lines {
+		fields := strings.Split(line, ":")
+		if len(fields) >= 2 && fields[0] == SSID {
+			return fields[1] == ""
+		}
+	}
+	return false
+}
+
+func Connect(SSID string) error {
+	if IsNetworkSaved(SSID) {
+		err := ConnectWithoutPassword(SSID)
+		if err == nil {
+			return nil
+		}
+		log.Println("connection failed")
+	}
+
+	fmt.Print("Enter the password for the network: ")
+	reader := bufio.NewReader(os.Stdin)
+	password, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+	}
+	deleteNetwork(SSID)
+	return ConnectWithPassword(SSID, strings.TrimSpace(password))
+}
+
+func ClearScr() {
+	fmt.Print("\033[H\033[2J")
 }
