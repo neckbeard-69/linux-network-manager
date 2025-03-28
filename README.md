@@ -1,2 +1,2 @@
-# nmcli-tui
-Creating this because I'm mad
+# A network manager for linux
+A simple network manager to connect and disconnect from wifi networks built using go on top of the nmcli utility. I planed on creating a tui, but I found out later that it's too much work for what I need. I created this tool for myself to satify my own needs (to avoid writing a long command every time I wanna do something with wifi). If you'd like to use it for some reason, you can check out the binary [here](https://github.com/neckbeard-69/linux-network-manager/releases/tag/v1.0). I built it only for x86 architecture, if you have an ARM based CPU, you can build it your own from source.
