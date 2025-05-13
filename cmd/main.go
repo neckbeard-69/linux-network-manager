@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/neckbeard-69/linux-network-manager/pkg/ui"
+	"github.com/neckbeard-69/linux-network-manager/pkg/utils"
 	"log"
-	"nmcli-tui/pkg/ui"
-	"nmcli-tui/pkg/utils"
 )
 
 func main() {

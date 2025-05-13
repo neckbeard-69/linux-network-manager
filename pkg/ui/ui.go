@@ -5,10 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"nmcli-tui/pkg/utils"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/neckbeard-69/linux-network-manager/pkg/utils"
 )
 
 func GetUserChoice() (int, error) {
